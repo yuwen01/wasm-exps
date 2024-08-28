@@ -6,8 +6,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.86"
-sp1-zkvm = { path = "../../../sp1/crates/zkvm/entrypoint" }
+sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git", branch = "dev"}
 sp1-derive = "1.1.0"
 wasmi = "0.36.0"
 wat = "1.216.0"

@@ -1,3 +1,5 @@
+use sp1_build::build_program;
+
 fn main() {
-    sp1_build::build_program(&format!("{}/../program", env!("CARGO_MANIFEST_DIR")));
+    build_program("../program")
 }

@@ -336,6 +336,7 @@ dependencies = [
 [[package]]
 name = "sp1-lib"
 version = "1.2.0-rc1"
+source = "git+https://github.com/succinctlabs/sp1.git?branch=dev#328af9f619a957ddafc662281ad28550085f304e"
 dependencies = [
  "anyhow",
  "bincode",
@@ -348,6 +349,7 @@ dependencies = [
 [[package]]
 name = "sp1-zkvm"
 version = "1.2.0-rc1"
+source = "git+https://github.com/succinctlabs/sp1.git?branch=dev#328af9f619a957ddafc662281ad28550085f304e"
 dependencies = [
  "bincode",
  "cfg-if",

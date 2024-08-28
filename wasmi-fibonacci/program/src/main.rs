@@ -1,80 +1,75 @@
 #![no_main]
 sp1_zkvm::entrypoint!(main);
-
-// use std::{fs::File, io::Write};
-
 use wasmi::*;
-// #[sp1_derive::cycle_tracker]
+
+const WAT: &str = r#"
+  (module
+    ;; Import the memory to store our results
+    ;; (memory 1)
+    ;; (export "memory" (memory 0))
+  
+    ;; Import the 'print' function for outputting the result
+    ;; (import "env" "print" (func $print (param i32)))
+  
+    ;; Function to calculate the n-th Fibonacci number
+      (func $fib (param $n i32) (result i32)
+      (local $a i32)
+      (local $b i32)
+      (local $temp i32)
+  
+      ;; If n <= 1, return n
+      (if (i32.le_s (local.get $n) (i32.const 1))
+        (then
+          (local.get $n)
+          (return)
+        )
+      )
+  
+      ;; Set initial values for the loop
+      (local.set $a (i32.const 0))
+      (local.set $b (i32.const 1))
+  
+      ;; Loop from 2 to n
+      (loop $loop
+        (local.set $temp (local.get $b))
+            (local.set $b 
+              (i32.rem_s 
+                (i32.add (local.get $a) (local.get $b)) 
+                (i32.const 7919)
+              )
+            )
+      (local.set $a (local.get $temp))
+        (local.set $n (i32.sub (local.get $n) (i32.const 1)))
+        (br_if $loop (i32.gt_s (local.get $n) (i32.const 1)))
+      )
+  
+      ;; Return the result
+      (local.get $b)
+    )
+  
+    ;; Export the Fibonacci function
+    (export "fib" (func $fib))
+  )
+"#;
 
 pub fn main() {
-    // First step is to create the Wasm execution engine with some config.
-    // In this example we are using the default configuration.
-
+  
     // Write n to public input
     println!("cycle-tracker-start: set up input");
     let n = sp1_zkvm::io::read::<i32>();
     sp1_zkvm::io::commit(&n);
-
-    // let n = 1000;
-
+  
+  
+    // First step is to create the Wasm execution engine with some config.
+    // In this example we are using the default configuration.
     let engine = Engine::default();
-    let wat = r#"
-(module
-  ;; Import the memory to store our results
-  ;; (memory 1)
-  ;; (export "memory" (memory 0))
-
-  ;; Import the 'print' function for outputting the result
-  ;; (import "env" "print" (func $print (param i32)))
-
-  ;; Function to calculate the n-th Fibonacci number
-    (func $fib (param $n i32) (result i32)
-    (local $a i32)
-    (local $b i32)
-    (local $temp i32)
-
-    ;; If n <= 1, return n
-    (if (i32.le_s (local.get $n) (i32.const 1))
-      (then
-        (local.get $n)
-        (return)
-      )
-    )
-
-    ;; Set initial values for the loop
-    (local.set $a (i32.const 0))
-    (local.set $b (i32.const 1))
-
-    ;; Loop from 2 to n
-    (loop $loop
-      (local.set $temp (local.get $b))
-          (local.set $b 
-            (i32.rem_s 
-              (i32.add (local.get $a) (local.get $b)) 
-              (i32.const 7919)
-            )
-          )
-    (local.set $a (local.get $temp))
-      (local.set $n (i32.sub (local.get $n) (i32.const 1)))
-      (br_if $loop (i32.gt_s (local.get $n) (i32.const 1)))
-    )
-
-    ;; Return the result
-    (local.get $b)
-  )
-
-  ;; Export the Fibonacci function
-  (export "fib" (func $fib))
-)
-
-
-    "#;
     // Wasmi does not yet support parsing `.wat` so we have to convert
     // out `.wat` into `.wasm` before we compile and validate it.
-    let wasm = wat::parse_str(&wat).unwrap();
+    println!("cycle-tracker-start: parse WAT");
+    let wasm = wat::parse_str(WAT).unwrap();
+    println!("cycle-tracker-end: parse WAT");
 
-    // let mut file = File::open("wasm/fib.wasm").unwrap();   // Create or truncate the file
-    // file.write_all(&wasm).unwrap();                              // Write the data to the file
+
     println!("cycle-tracker-end: set up input");
     println!("cycle-tracker-start: set up runtime");
 
@@ -102,7 +97,6 @@ pub fn main() {
     // And finally we can call the wasm!
     let result = &hello.call(&mut store, n).unwrap();
 
-    // println!("Result: {}", result);
     sp1_zkvm::io::commit(result);
     println!("cycle-tracker-end: interpreter");
 }

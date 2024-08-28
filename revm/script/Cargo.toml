@@ -1,5 +1,5 @@
 [package]
-name = "script"
+name = "revm-script"
 version = { workspace = true }
 edition = { workspace = true }
 publish = false

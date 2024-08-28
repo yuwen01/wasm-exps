@@ -1,18 +1,11 @@
 #![no_main]
 sp1_zkvm::entrypoint!(main);
-use std::io::{stdin, stdout};
+use std::io::stdout;
 
 use wain_exec::{DefaultImporter, Runtime, Value};
 use wain_syntax_text::parse;
 
-pub fn main() {
-
-    println!("cycle-tracker-start: set up input");
-
-    let n = sp1_zkvm::io::read::<i32>();
-    sp1_zkvm::io::commit(&n);
-
-    let wat = r#"
+const WAT: &str = r#"
   (module
     ;; Import the memory to store our results
     ;; (memory 1)
@@ -60,26 +53,30 @@ pub fn main() {
     ;; Export the Fibonacci function
     (export "fib" (func $fib))
   )
-  
-  
-      "#;
-    
+"#;
 
+pub fn main() {
+
+    println!("cycle-tracker-start: set up input");
+
+    let n = sp1_zkvm::io::read::<i32>();
+    sp1_zkvm::io::commit(&n);
+
+    println!("cycle-tracker-start: parse WAT");
     // Parse the WAT code to a WebAssembly module
-    let tree = match parse(&wat) {
+    let tree = match parse(WAT) {
         Ok(tree) => tree,
         Err(err) => {
             eprintln!("Could not parse: {}", err);
             panic!();
         }
     };
-
+    println!("cycle-tracker-end: parse WAT");
     println!("cycle-tracker-end: set up input");
+
     println!("cycle-tracker-start: set up runtime");
-
-
-    // let stdin = stdin();
-    let input = "I sure hope this is enough input also what is this even used for i guess ill never find out hahahahahha";
+    
+    let input = "some dummy text";
     let stdout = stdout();
     let importer = DefaultImporter::with_stdio(input.as_bytes(), stdout.lock());
     // Instantiate the module

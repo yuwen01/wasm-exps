@@ -7,7 +7,7 @@ fn main() {
     // Setup logging.
     utils::setup_logger();
 
-    // Create an input stream and write '500' to it.
+    // Create an input stream and write '1000' to it.
     let n = 1000u32;
 
     // The input stream that the program will read from using `sp1_zkvm::io::read`. Note that the
@@ -36,9 +36,9 @@ fn main() {
     // Note that this output is read from values commited to in the program using
     // `sp1_zkvm::io::commit`.
     let _ = proof.public_values.read::<u32>();
-    let a = proof.public_values.read::<u32>();
+    let a = proof.public_values.read::<Vec<u8>>();
 
-    println!("a: {}", a);
+    println!("a: {:?}", a);
 
     // Verify proof and public values
     client.verify(&proof, &vk).expect("verification failed");
