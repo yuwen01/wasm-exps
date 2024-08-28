@@ -434,14 +434,14 @@ version = "1.1.0"
 dependencies = [
  "sp1-zkvm",
  "wain-exec",
- "wain-syntax-text",
+ "wain-syntax-binary",
 ]
 
 [[package]]
-name = "wain-syntax-text"
-version = "0.2.1"
+name = "wain-syntax-binary"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "699277e25e6538b75281dfe72869010a9f0860aceab1991f816dd35e8fa6881a"
+checksum = "38fb7b65272785ee80079d78630d17c0347ae7f3074534bbb7c3653b560980e1"
 dependencies = [
  "wain-ast",
 ]
