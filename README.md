@@ -1,6 +1,8 @@
 # Wasm / EVM interpreters in SP1
 
-These experiments demonstrate that running a WASM interpreter is feasible in SP1. 
+These experiments demonstrate that running a WASM interpreter in SP1 is feasible. We write a simple program that computes the n'th fibonacci number mod 7919, and compile it to a .wat and evm bytecode. As a baseline, we implement this program in plain rust. We run the evm bytecode through `revm-interpreter`, and we run the .wat through the `wasmi` and `wain` interpreters. 
+
+We evaluate the number of sp1 cycles it takes to execute the fibonacci program in various interpreters.
 
 ## Running
 
