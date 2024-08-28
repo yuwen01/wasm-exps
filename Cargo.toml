@@ -1,0 +1,32 @@
+[workspace]
+members = [
+  "wasmi-fibonacci/script",
+  "wain-fibonacci/script",
+  "fibonacci/script",
+  "revm/script",
+]
+resolver = "2"
+
+[workspace.package]
+version = "1.1.0"
+edition = "2021"
+
+[workspace.dependencies]
+sp1-build = { path = "../sp1/crates/build" }
+sp1-derive = { path = "../sp1/crates/derive" }
+sp1-core-executor = { path = "../sp1/crates/core/executor" }
+sp1-core-machine = { path = "../sp1/crates/core/machine" }
+sp1-cli = { path = "../sp1/crates/cli", default-features = false }
+sp1-eval = { path = "../sp1/crates/eval", default-features = false }
+sp1-helper = { path = "../sp1/crates/helper", default-features = false }
+sp1-primitives = { path = "../sp1/crates/primitives" }
+sp1-prover = { path = "../sp1/crates/prover" }
+sp1-recursion-compiler = { path = "../sp1/crates/recursion/compiler" }
+sp1-recursion-core = { path = "../sp1/crates/recursion/core", default-features = false }
+sp1-recursion-derive = { path = "../sp1/crates/recursion/derive", default-features = false }
+sp1-recursion-gnark-ffi = { path = "../sp1/crates/recursion/gnark-ffi", default-features = false }
+sp1-recursion-program = { path = "../sp1/crates/recursion/program", default-features = false }
+sp1-recursion-circuit = { path = "../sp1/crates/recursion/circuit", default-features = false }
+sp1-sdk = { path = "../sp1/crates/sdk" }
+sp1-lib = { path = "../sp1/crates/zkvm/lib", default-features = false }
+sp1-zkvm = { path = "../sp1/crates/zkvm/entrypoint", default-features = false }

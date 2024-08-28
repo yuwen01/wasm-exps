@@ -1,0 +1,8 @@
+**/target
+.vscode/*
+
+*/target/*
+
+**/.DS_STORE
+
+**/trace.log
