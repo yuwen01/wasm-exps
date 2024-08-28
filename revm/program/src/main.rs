@@ -57,7 +57,10 @@ pub fn main() {
     let raw_out = interp.run(EMPTY_SHARED_MEMORY, table, &mut host);
     println!("cycle-tracker-end: interpreter");
 
+    // println!("{}", interp.)
     let out = raw_out.into_result_return().unwrap().output;
+
+    let res: Vec<u8> = out.into();
     // commit to output
-    sp1_zkvm::io::commit(&out);
+    sp1_zkvm::io::commit(&res);
 }

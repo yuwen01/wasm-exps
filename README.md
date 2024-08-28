@@ -25,12 +25,15 @@ The setup costs are roughly fixed, and the "run interpreter" part is responsible
 | Experiment Name | Set up input | Set up runtime | Interpreter loop | Total cycles |
 |-----------------|--------------|----------------|------------------|--------------|
 | Baseline        | --           | --             | --               | 16,944       |
-| Wasmi           | 10,420       | 37,349         | 171,362          | 423,981      |
-| Wain            | 141,943      | 1,025          | 2,520,476        | 2,667,383    |
+| Wasmi           | 43,771       | 3,997          | 183,348          | 237,382      |
+| Wain            | 12,813       | 1,025          | 2,520,476        | 2,540,679    |
 | Revm            | 42,395       | 11,262         | 9,095,092        | 9,153,940    |
 
 ## Other notes
 
 `fib.sol` compiles into the EVM bytecode I used for `revm`. 
-The wasm program executes in roughly 6000 instructions.
+
+The wasm program executes in 5,998 instructions.
+
+The evm program executes in 151,903 instructions.
 
