@@ -1,6 +1,6 @@
 # Installation
 
-I had the sp1 repo adjacent to this one. To run `wasmi-fibonacci`, you need to add the following lines to the top of `/sp1/crates/zkvm/entrypoint/src/libm.rs`
+I had the sp1 repo adjacent to this one. That is, this repo was at `~/wasm-exps`, and sp1 was at `~/sp1`. To run `wasmi-fibonacci`, you need to add the following lines to the top of `/sp1/crates/zkvm/entrypoint/src/libm.rs`
 
 ```
 #[no_mangle]
