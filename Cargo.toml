@@ -1,9 +1,10 @@
 [workspace]
 members = [
-  "wasmi-fibonacci/script",
-  "wain-fibonacci/script",
+  # "wasmi-fibonacci/script",
+  # "wain-fibonacci/script",
   "fibonacci/script",
-  "revm/script",
+  "fibonacci/program"
+  # "revm/script",
 ]
 resolver = "2"
 
@@ -12,6 +13,6 @@ version = "1.1.0"
 edition = "2021"
 
 [workspace.dependencies]
-sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git", branch = "dev"}
-sp1-sdk = { git = "https://github.com/succinctlabs/sp1.git", branch = "dev" }
-sp1-build = { git = "https://github.com/succinctlabs/sp1.git", branch = "dev" }
+sp1-zkvm = { path = "../sp1/crates/zkvm/entrypoint" }
+sp1-sdk = { path = "../sp1/crates/sdk", default-features = false }
+sp1-build = { path = "../sp1/crates/build", default-features = false }

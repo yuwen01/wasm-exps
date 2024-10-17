@@ -3,6 +3,9 @@ use sp1_sdk::{utils, ProverClient, SP1ProofWithPublicValues, SP1Stdin};
 /// The ELF we want to execute inside the zkVM.
 const ELF: &[u8] = include_bytes!("../../program/elf/riscv32im-succinct-zkvm-elf");
 
+#[cfg(target_arch = "wasm32")]
+const PROOF: &[u8] = include_bytes!("../proof-with-pis.bin");
+
 fn main() {
     // Setup logging.
     utils::setup_logger();
@@ -16,7 +19,7 @@ fn main() {
     stdin.write(&n);
 
     // Create a `ProverClient` method.
-    let client = ProverClient::new();
+    let client: ProverClient = ProverClient::new();
 
     // Execute the program using the `ProverClient.execute` method, without generating a proof.
     let (_, report) = client.execute(ELF, stdin.clone()).run().unwrap();
@@ -24,36 +27,49 @@ fn main() {
         "executed program with {} cycles",
         report.total_instruction_count()
     );
-
-    // Generate the proof for the given program and input.
     let (pk, vk) = client.setup(ELF);
-    let mut proof = client.prove(&pk, stdin).run().unwrap();
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        // Generate the proof for the given program and input.
+        let mut proof = client.prove(&pk, stdin).compressed().run().unwrap();
 
-    println!("generated proof");
+        // let mut proof: SP1ProofWithPublicValues = bincode::deserialize_from(PROOF).unwrap();
+        // client.verify(&proof, &vk).expect("verification failed");
 
-    // Read and verify the output.
-    //
-    // Note that this output is read from values commited to in the program using
-    // `sp1_zkvm::io::commit`.
-    let _ = proof.public_values.read::<u32>();
-    let a = proof.public_values.read::<Vec<u8>>();
+        println!("generated proof");
 
-    println!("a: {:?}", a);
+        // Read and verify the output.
+        //
+        // Note that this output is read from values committed to in the program using
+        // `sp1_zkvm::io::commit`.
+        let a = proof.public_values.read::<u32>();
+        let b = proof.public_values.read::<u32>();
 
-    // Verify proof and public values
-    client.verify(&proof, &vk).expect("verification failed");
+        println!("a: {}", a);
+        println!("b: {}", b);
 
-    // Test a round trip of proof serialization and deserialization.
-    proof
-        .save("proof-with-pis.bin")
-        .expect("saving proof failed");
-    let deserialized_proof =
-        SP1ProofWithPublicValues::load("proof-with-pis.bin").expect("loading proof failed");
+        // Verify proof and public values
+        client.verify(&proof, &vk).expect("verification failed");
 
-    // Verify the deserialized proof.
-    client
-        .verify(&deserialized_proof, &vk)
-        .expect("verification failed");
+        // Test a round trip of proof serialization and deserialization.
+        proof
+            .save("proof-with-pis.bin")
+            .expect("saving proof failed");
+        let deserialized_proof =
+            SP1ProofWithPublicValues::load("proof-with-pis.bin").expect("loading proof failed");
 
-    println!("successfully generated and verified proof for the program!")
+        // Verify the deserialized proof.
+        client
+            .verify(&deserialized_proof, &vk)
+            .expect("verification failed");
+
+        println!("successfully generated and verified proof for the program!")
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    {
+        let mut proof: SP1ProofWithPublicValues = bincode::deserialize_from(PROOF).unwrap();
+        client.verify(&proof, &vk).expect("verification failed");
+        println!("successfully generated and verified proof for the program!")
+    }
 }
